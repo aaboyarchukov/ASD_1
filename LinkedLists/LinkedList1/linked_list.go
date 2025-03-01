@@ -44,7 +44,7 @@ func (l *LinkedList) Delete(n int, all bool) {
 		temp := l.head
 		for temp != nil {
 			if temp.value == n {
-
+				print()
 				break
 			}
 		}
