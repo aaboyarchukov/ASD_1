@@ -7,13 +7,13 @@ import (
 func TestDeleted(t *testing.T) {
 	tests := []struct {
 		name  string
-		input LinkedList
+		input *LinkedList
 		value int
-		want  LinkedList
+		want  *LinkedList
 	}{
-		{"Test1: ", getLinkedList([]int{}), 6, getLinkedList([]int{})},
-		{"Test2: ", getLinkedList([]int{1, 2, 3, 4, 5}), 5, getLinkedList([]int{1, 2, 3, 4})},
-		{"Test3: ", getLinkedList([]int{1, 2, 3}), 4, getLinkedList([]int{1, 2, 3})},
+		{"Test1: ", GetLinkedList([]int{}), 6, GetLinkedList([]int{})},
+		{"Test2: ", GetLinkedList([]int{1, 2, 3, 4, 5}), 5, GetLinkedList([]int{1, 2, 3, 4})},
+		{"Test3: ", GetLinkedList([]int{1, 2, 3}), 4, GetLinkedList([]int{1, 2, 3})},
 	}
 
 	for _, tempTest := range tests {
@@ -28,16 +28,6 @@ func TestCount(t *testing.T)       {}
 func TestInsertAfter(t *testing.T) {}
 
 func TestAdditionLL(t *testing.T) {}
-
-func getLinkedList(values []int) LinkedList {
-	var resultLL LinkedList // resulting linked list
-	for _, value := range values {
-		resultLL.AddInTail(Node{
-			value: value,
-		})
-	}
-	return resultLL
-}
 
 func equalLists(l1 LinkedList, l2 LinkedList) bool {
 

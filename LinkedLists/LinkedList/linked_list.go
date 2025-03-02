@@ -63,26 +63,26 @@ func (l *LinkedList) Delete(n int, all bool) {
 	}
 
 	tempNode := l.head
-	prev := Node{
-		next: l.head,
-	}
-	if all {
+	var prev *Node
+	deleted := false
 
-	} else {
-		for tempNode != nil {
-			if tempNode.value == n {
-				if prev.next == l.head {
-					l.head = tempNode.next
-				} else if prev.next == tempNode {
-					prev.next = tempNode.next
-					if tempNode == l.tail {
-						l.tail = &prev
-					}
-				}
-				tempNode = tempNode.next
-			}
+	for tempNode != nil {
+		if tempNode.value == n && tempNode == l.head {
+			l.head = tempNode.next
+			deleted = true
+		} else if tempNode.value == n && tempNode == l.tail {
+			prev.next = nil
+			l.tail = prev
+			deleted = true
+		} else if tempNode.value == n {
+			prev.next = tempNode.next
+			deleted = true
 		}
-
+		if !all && deleted {
+			break
+		}
+		prev = tempNode
+		tempNode = tempNode.next
 	}
 }
 
@@ -116,10 +116,36 @@ func (l *LinkedList) Clean() {
 	l.tail = nil
 }
 
-// func PrintLL(LL *LinkedList) {
-// 	temp := LL.head
-// 	for temp != nil {
-// 		fmt.Println(temp.value)
-// 		temp = temp.next
-// 	}
-// }
+func PrintLL(LL *LinkedList) {
+	temp := LL.head
+	for temp != nil {
+		fmt.Printf("%d ", temp.value)
+		temp = temp.next
+	}
+	fmt.Println()
+}
+
+func GetLinkedList(values []int) *LinkedList {
+	var resultLL LinkedList // resulting linked list
+	for _, value := range values {
+		resultLL.AddInTail(Node{
+			value: value,
+		})
+	}
+	return &resultLL
+}
+func main() {
+	l := GetLinkedList([]int{22, 2, 77, 6, 22, 43, 22, 76, 89})
+	fmt.Println("Before deleting: ")
+	PrintLL(l)
+	fmt.Println("After deleting: ")
+	l.Delete(89, false)
+	PrintLL(l)
+	fmt.Println("After deleting: ")
+	l.Delete(22, true)
+	PrintLL(l)
+	fmt.Println("After deleting: ")
+	l.Delete(6, true)
+	PrintLL(l)
+
+}
