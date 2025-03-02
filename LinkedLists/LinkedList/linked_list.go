@@ -121,14 +121,14 @@ func (l *LinkedList) Clean() {
 	l.tail = nil
 }
 
-// func PrintLL(LL *LinkedList) {
-// 	temp := LL.head
-// 	for temp != nil {
-// 		fmt.Printf("%d ", temp.value)
-// 		temp = temp.next
-// 	}
-// 	fmt.Println()
-// }
+func PrintLL(LL *LinkedList) {
+	temp := LL.head
+	for temp != nil {
+		fmt.Printf("%d ", temp.value)
+		temp = temp.next
+	}
+	fmt.Println()
+}
 
 func GetLinkedList(values []int) *LinkedList {
 	var resultLL LinkedList // resulting linked list
@@ -156,4 +156,10 @@ func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
 	}
 
 	return false
+}
+
+func main() {
+	l := GetLinkedList([]int{22, 2, 77, 6, 22, 76, 89})
+	l.Delete(22, true)
+	PrintLL(l)
 }
