@@ -66,6 +66,11 @@ func (l *LinkedList) Delete(n int, all bool) {
 	var prev *Node
 	deleted := false
 
+	if l.Count() == 1 && tempNode.value == n {
+		l.Clean()
+		return
+	}
+
 	for tempNode != nil {
 		if tempNode.value == n && tempNode == l.head {
 			l.head = tempNode.next
@@ -116,14 +121,14 @@ func (l *LinkedList) Clean() {
 	l.tail = nil
 }
 
-func PrintLL(LL *LinkedList) {
-	temp := LL.head
-	for temp != nil {
-		fmt.Printf("%d ", temp.value)
-		temp = temp.next
-	}
-	fmt.Println()
-}
+// func PrintLL(LL *LinkedList) {
+// 	temp := LL.head
+// 	for temp != nil {
+// 		fmt.Printf("%d ", temp.value)
+// 		temp = temp.next
+// 	}
+// 	fmt.Println()
+// }
 
 func GetLinkedList(values []int) *LinkedList {
 	var resultLL LinkedList // resulting linked list
@@ -134,18 +139,21 @@ func GetLinkedList(values []int) *LinkedList {
 	}
 	return &resultLL
 }
-func main() {
-	l := GetLinkedList([]int{22, 2, 77, 6, 22, 43, 22, 76, 89})
-	fmt.Println("Before deleting: ")
-	PrintLL(l)
-	fmt.Println("After deleting: ")
-	l.Delete(89, false)
-	PrintLL(l)
-	fmt.Println("After deleting: ")
-	l.Delete(22, true)
-	PrintLL(l)
-	fmt.Println("After deleting: ")
-	l.Delete(6, true)
-	PrintLL(l)
 
+func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
+	// equals len and elements
+	countL1, countL2 := l1.Count(), l2.Count()
+	if countL1 == countL2 {
+		tempL1, tempL2 := l1.head, l2.head
+		for tempL1 != nil && tempL2 != nil {
+			if tempL1.value != tempL2.value {
+				return false
+			}
+			tempL1 = tempL1.next
+			tempL2 = tempL2.next
+		}
+		return true
+	}
+
+	return false
 }
