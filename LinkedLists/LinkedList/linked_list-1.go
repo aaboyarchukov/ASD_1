@@ -2,8 +2,9 @@ package main
 
 import (
 	"errors"
-	"os"
-	"reflect"
+	"fmt"
+	_ "os"
+	_ "reflect"
 )
 
 type Node struct {
@@ -191,3 +192,6 @@ func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
 	return false
 }
 
+func main() {
+	fmt.Println(GetLinkedList([]int{}))
+}
