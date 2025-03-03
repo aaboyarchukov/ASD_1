@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -76,7 +77,27 @@ func TestFindAll(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    *LinkedList
+		findNode Node
+		want     Node
+		err      error
+	}{
+		{"Test1: ", GetLinkedList([]int{}), Node{value: 1}, Node{value: -1}, errors.New("node is not finding")},
+		{"Test2: ", GetLinkedList([]int{22, 1, 4, 5, 33}), Node{value: 1}, Node{value: 1}, nil},
+		{"Test3: ", GetLinkedList([]int{22, 1, 4, 5, 33}), Node{value: 10}, Node{value: -1}, errors.New("node is not finding")},
+		{"Test4: ", GetLinkedList([]int{22}), Node{value: 1}, Node{value: -1}, errors.New("node is not finding")},
+		{"Test5: ", GetLinkedList([]int{22}), Node{value: 22}, Node{value: 22}, nil},
+	}
 
+	for _, tempTest := range tests {
+		tempNode, errFind := tempTest.input.Find(tempTest.findNode.value)
+		if tempNode.value != tempTest.want.value && errFind != tempTest.err {
+			t.Errorf("failed %s: find value: %v", tempTest.name, tempTest.findNode)
+
+		}
+	}
 }
 func TestCount(t *testing.T) {
 	tests := []struct {
