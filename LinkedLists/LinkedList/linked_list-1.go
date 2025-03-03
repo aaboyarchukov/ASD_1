@@ -2,8 +2,9 @@ package main
 
 import (
 	"errors"
-	"os"
-	"reflect"
+	"fmt"
+	_ "os"
+	_ "reflect"
 )
 
 type Node struct {
@@ -73,7 +74,6 @@ func (l *LinkedList) Delete(n int, all bool) {
 
 	tempNode := l.head
 	var prev *Node
-	deleted := false
 
 	if l.Count() == 1 && tempNode.value == n {
 		l.Clean()
@@ -81,6 +81,7 @@ func (l *LinkedList) Delete(n int, all bool) {
 	}
 
 	for tempNode != nil {
+		deleted := false
 		if tempNode.value == n && tempNode == l.head {
 			l.head = tempNode.next
 			deleted = true
@@ -93,9 +94,11 @@ func (l *LinkedList) Delete(n int, all bool) {
 			deleted = true
 		}
 		if !all && deleted {
-			break
+			return
 		}
-		prev = tempNode
+		if !deleted {
+			prev = tempNode
+		}
 		tempNode = tempNode.next
 	}
 }
@@ -139,14 +142,14 @@ func (l *LinkedList) Clean() {
 	l.tail = nil
 }
 
-// func PrintLL(LL *LinkedList) {
-// 	temp := LL.head
-// 	for temp != nil {
-// 		fmt.Printf("%d ", temp.value)
-// 		temp = temp.next
-// 	}
-// 	fmt.Println()
-// }
+func PrintLL(LL *LinkedList) {
+	temp := LL.head
+	for temp != nil {
+		fmt.Printf("%d ", temp.value)
+		temp = temp.next
+	}
+	fmt.Println()
+}
 
 func GetLinkedList(values []int) *LinkedList {
 	var resultLL LinkedList // resulting linked list
@@ -189,3 +192,10 @@ func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
 	return false
 }
 
+func main() {
+	l := GetLinkedList([]int{22, 3, 1, 4, 4, 5, 6, 12})
+	l.Delete(1, false)
+	PrintLL(l)
+	l.Delete(4, true)
+	PrintLL(l)
+}
