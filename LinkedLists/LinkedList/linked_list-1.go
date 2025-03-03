@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 )
 
 type Node struct {
@@ -23,6 +23,8 @@ func (l *LinkedList) AddInTail(item Node) {
 	l.tail = &item
 }
 
+// task 5
+// t = O(n), where n = len(list)
 func (l *LinkedList) Count() int {
 	var count int
 	tempNode := l.head
@@ -42,9 +44,11 @@ func (l *LinkedList) Find(n int) (Node, error) {
 		}
 		tempNode = tempNode.next
 	}
-	return Node{value: -1, next: nil}, fmt.Errorf("node with value %d not finding", n)
+	return Node{value: -1, next: nil}, errors.New("node is not finding")
 }
 
+// task 4
+// t = O(n), where n = len(list)
 func (l *LinkedList) FindAll(n int) []Node {
 	var nodes []Node
 	tempNode := l.head
@@ -57,6 +61,10 @@ func (l *LinkedList) FindAll(n int) []Node {
 	return nodes
 }
 
+// task 1
+// t = O(n), where n = len(list)
+// task 2
+// t = O(n), where n = len(list)
 func (l *LinkedList) Delete(n int, all bool) {
 	if l.head == nil {
 		return
@@ -91,16 +99,23 @@ func (l *LinkedList) Delete(n int, all bool) {
 	}
 }
 
+// task 6
+// t = O(n), where n = len(list)
 func (l *LinkedList) Insert(after *Node, add Node) {
+	if l.head == nil {
+		l.InsertFirst(add)
+		return
+	}
 	tempNode := l.head
-	for tempNode != after {
+	// if node will not exists, then we have to finding it first
+	for tempNode.value != after.value {
 		tempNode = tempNode.next
 	}
 	if tempNode == l.tail {
 		l.AddInTail(add)
 	} else {
-		nextNode := after.next
-		after.next = &add
+		nextNode := tempNode.next
+		tempNode.next = &add
 		add.next = nextNode
 	}
 
@@ -116,19 +131,21 @@ func (l *LinkedList) InsertFirst(first Node) {
 
 }
 
+// task 3
+// t = O(1)
 func (l *LinkedList) Clean() {
 	l.head = nil
 	l.tail = nil
 }
 
-func PrintLL(LL *LinkedList) {
-	temp := LL.head
-	for temp != nil {
-		fmt.Printf("%d ", temp.value)
-		temp = temp.next
-	}
-	fmt.Println()
-}
+// func PrintLL(LL *LinkedList) {
+// 	temp := LL.head
+// 	for temp != nil {
+// 		fmt.Printf("%d ", temp.value)
+// 		temp = temp.next
+// 	}
+// 	fmt.Println()
+// }
 
 func GetLinkedList(values []int) *LinkedList {
 	var resultLL LinkedList // resulting linked list
@@ -142,6 +159,18 @@ func GetLinkedList(values []int) *LinkedList {
 
 func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
 	// equals len and elements
+	if l1.head == nil && l1.tail == nil &&
+		l2.head == nil && l2.tail == nil {
+		return true
+	}
+
+	if l1.head.value != l2.head.value {
+		return false
+	}
+	if l1.tail.value != l2.tail.value {
+		return false
+	}
+
 	countL1, countL2 := l1.Count(), l2.Count()
 	if countL1 == countL2 {
 		tempL1, tempL2 := l1.head, l2.head
@@ -152,14 +181,9 @@ func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
 			tempL1 = tempL1.next
 			tempL2 = tempL2.next
 		}
+
 		return true
 	}
 
 	return false
-}
-
-func main() {
-	l := GetLinkedList([]int{22, 2, 77, 6, 22, 76, 89})
-	l.Delete(22, true)
-	PrintLL(l)
 }
