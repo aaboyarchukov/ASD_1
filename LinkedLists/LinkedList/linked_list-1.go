@@ -35,7 +35,6 @@ func (l *LinkedList) Count() int {
 	return count
 }
 
-// error не nil, если узел не найден
 func (l *LinkedList) Find(n int) (Node, error) {
 	tempNode := l.head
 	for tempNode != nil {
