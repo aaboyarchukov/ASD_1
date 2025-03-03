@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	_ "os"
 	_ "reflect"
 )
@@ -142,14 +141,14 @@ func (l *LinkedList) Clean() {
 	l.tail = nil
 }
 
-func PrintLL(LL *LinkedList) {
-	temp := LL.head
-	for temp != nil {
-		fmt.Printf("%d ", temp.value)
-		temp = temp.next
-	}
-	fmt.Println()
-}
+// func PrintLL(LL *LinkedList) {
+// 	temp := LL.head
+// 	for temp != nil {
+// 		fmt.Printf("%d ", temp.value)
+// 		temp = temp.next
+// 	}
+// 	fmt.Println()
+// }
 
 func GetLinkedList(values []int) *LinkedList {
 	var resultLL LinkedList // resulting linked list
@@ -190,12 +189,4 @@ func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
 	}
 
 	return false
-}
-
-func main() {
-	l := GetLinkedList([]int{22, 3, 1, 4, 4, 5, 6, 12})
-	l.Delete(1, false)
-	PrintLL(l)
-	l.Delete(4, true)
-	PrintLL(l)
 }
