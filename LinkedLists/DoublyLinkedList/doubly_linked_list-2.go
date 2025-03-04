@@ -171,6 +171,14 @@ func EqualLists(l1 *LinkedList2, l2 *LinkedList2) bool {
 	}
 
 	if countL1 == countL2 {
+		if l1.head.prev != nil && l2.head.prev != nil {
+			return false
+		}
+
+		if l1.Count() > 1 && (l1.tail.prev == nil || l2.tail.prev == nil) {
+			return false
+		}
+
 		tempL1, tempL2 := l1.head, l2.head
 		for tempL1 != nil && tempL2 != nil {
 			if tempL1.value != tempL2.value {
