@@ -69,6 +69,12 @@ func (l *LinkedList2) Delete(n int, all bool) {
 	if l.head == nil {
 		return
 	}
+
+	if l.Count() == 1 {
+		l.Clean()
+		return
+	}
+
 	tempNode := l.head
 	for tempNode != nil {
 		deleted := false
@@ -100,11 +106,35 @@ func (l *LinkedList2) Delete(n int, all bool) {
 }
 
 func (l *LinkedList2) Insert(after *Node, add Node) {
+	if l.head == nil {
+		l.InsertFirst(add)
+	} else if after.value == l.tail.value {
+		l.AddInTail(add)
+	} else {
+		tempNode := l.head
+		for tempNode.value != after.value {
+			tempNode = tempNode.next
+		}
+		next := tempNode.next
 
+		tempNode.next = &add
+		add.prev = tempNode
+
+		add.next = next
+		next.prev = &add
+	}
 }
 
 func (l *LinkedList2) InsertFirst(first Node) {
-
+	if l.head == nil {
+		l.tail = &first
+		l.tail.next = nil
+	} else {
+		first.next = l.head
+		l.head.prev = &first
+	}
+	l.head = &first
+	first.prev = nil
 }
 
 func (l *LinkedList2) Clean() {
@@ -123,6 +153,11 @@ func GetLinkedList(values []int) *LinkedList2 {
 }
 
 func EqualLists(l1 *LinkedList2, l2 *LinkedList2) bool {
+	countL1, countL2 := l1.Count(), l2.Count()
+	if countL1 != countL2 {
+		return false
+	}
+
 	if l1.head == nil &&
 		l2.head == nil {
 		return true
@@ -135,13 +170,13 @@ func EqualLists(l1 *LinkedList2, l2 *LinkedList2) bool {
 		return false
 	}
 
-	countL1, countL2 := l1.Count(), l2.Count()
 	if countL1 == countL2 {
 		tempL1, tempL2 := l1.head, l2.head
 		for tempL1 != nil && tempL2 != nil {
 			if tempL1.value != tempL2.value {
 				return false
 			}
+
 			tempL1 = tempL1.next
 			tempL2 = tempL2.next
 		}

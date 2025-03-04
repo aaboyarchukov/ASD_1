@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+//	func printTesting(l *LinkedList2, t *testing.T) {
+//		temp := l.head
+//		for temp != nil {
+//			t.Errorf("%d ", temp.value)
+//			temp = temp.next
+//		}
+//		t.Error()
+//	}
+
 func TestFindAll(t *testing.T) {
 	tests := []struct {
 		name  string
@@ -111,6 +120,48 @@ func TestDeleted(t *testing.T) {
 
 		if !EqualLists(test.input, test.want) {
 			t.Errorf("failed %s: deleting node with values %v", test.name, test.values)
+		}
+	}
+}
+
+func TestInsertFirst(t *testing.T) {
+	tests := []struct {
+		name  string
+		input *LinkedList2
+		node  Node
+		want  *LinkedList2
+	}{
+		{"Test1: ", GetLinkedList([]int{}), Node{value: 1}, GetLinkedList([]int{1})},
+		{"Test2: ", GetLinkedList([]int{22, 1, 3, 12}), Node{value: 10}, GetLinkedList([]int{10, 22, 1, 3, 12})},
+		{"Test3: ", GetLinkedList([]int{22}), Node{value: 11}, GetLinkedList([]int{11, 22})},
+	}
+
+	for _, tempTest := range tests {
+		test := tempTest
+		test.input.InsertFirst(test.node)
+		if !EqualLists(test.input, test.want) {
+			t.Errorf("failed %s: insert first node", test.name)
+		}
+	}
+}
+func TestInsert(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     *LinkedList2
+		afterNode *Node
+		node      Node
+		want      *LinkedList2
+	}{
+		{"Test1: ", GetLinkedList([]int{22, 10, 3, 12}), &Node{value: 10}, Node{value: 1}, GetLinkedList([]int{22, 10, 1, 3, 12})},
+		{"Test2: ", GetLinkedList([]int{22, 10, 3, 12}), &Node{value: 12}, Node{value: 1}, GetLinkedList([]int{22, 10, 3, 12, 1})},
+		{"Test3: ", GetLinkedList([]int{22}), &Node{value: 22}, Node{value: 11}, GetLinkedList([]int{22, 11})},
+	}
+
+	for _, tempTest := range tests {
+		test := tempTest
+		test.input.Insert(test.afterNode, test.node)
+		if !EqualLists(test.input, test.want) {
+			t.Errorf("failed %s: insert node after node", test.name)
 		}
 	}
 }
