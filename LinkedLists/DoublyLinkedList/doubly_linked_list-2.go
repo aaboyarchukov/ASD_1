@@ -2,8 +2,8 @@ package main
 
 import (
 	"errors"
-	_ "os"
-	_ "reflect"
+	"os"
+	"reflect"
 )
 
 type Node struct {
@@ -194,3 +194,4 @@ func EqualLists(l1 *LinkedList2, l2 *LinkedList2) bool {
 
 	return false
 }
+
