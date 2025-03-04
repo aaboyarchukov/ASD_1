@@ -7,29 +7,34 @@ import (
 )
 
 type Node struct {
+	prev  *Node
 	next  *Node
 	value int
 }
 
-type LinkedList struct {
+type LinkedList2 struct {
 	head *Node
 	tail *Node
 }
 
-func (l *LinkedList) AddInTail(item Node) {
+func (l *LinkedList2) AddInTail(item Node) {
 	if l.head == nil {
 		l.head = &item
+		l.head.next = nil
+		l.head.prev = nil
 	} else {
 		l.tail.next = &item
+		item.prev = l.tail
+
 	}
 	l.tail = &item
+	l.tail.next = nil
 }
 
-// task 5
-// t = O(n), where n = len(list)
-func (l *LinkedList) Count() int {
-	var count int
+func (l *LinkedList2) Count() int {
+	count := 0
 	tempNode := l.head
+
 	for tempNode != nil {
 		count++
 		tempNode = tempNode.next
@@ -37,7 +42,7 @@ func (l *LinkedList) Count() int {
 	return count
 }
 
-func (l *LinkedList) Find(n int) (Node, error) {
+func (l *LinkedList2) Find(n int) (Node, error) {
 	tempNode := l.head
 	for tempNode != nil {
 		if tempNode.value == n {
@@ -48,9 +53,7 @@ func (l *LinkedList) Find(n int) (Node, error) {
 	return Node{value: -1, next: nil}, errors.New("node is not finding")
 }
 
-// task 4
-// t = O(n), where n = len(list)
-func (l *LinkedList) FindAll(n int) []Node {
+func (l *LinkedList2) FindAll(n int) []Node {
 	var nodes []Node
 	tempNode := l.head
 	for tempNode != nil {
@@ -62,96 +65,55 @@ func (l *LinkedList) FindAll(n int) []Node {
 	return nodes
 }
 
-// task 1
-// t = O(n), where n = len(list)
-// task 2
-// t = O(n), where n = len(list)
-func (l *LinkedList) Delete(n int, all bool) {
+func (l *LinkedList2) Delete(n int, all bool) {
 	if l.head == nil {
 		return
 	}
-
 	tempNode := l.head
-	var prev *Node
-
-	if l.Count() == 1 && tempNode.value == n {
-		l.Clean()
-		return
-	}
-
 	for tempNode != nil {
 		deleted := false
 		if tempNode.value == n && tempNode == l.head {
 			l.head = tempNode.next
+			if l.head != nil {
+				l.head.prev = nil
+			}
 			deleted = true
 		} else if tempNode.value == n && tempNode == l.tail {
-			prev.next = nil
-			l.tail = prev
+			l.tail = tempNode.prev
+			if l.tail != nil {
+				l.tail.next = nil
+			}
 			deleted = true
 		} else if tempNode.value == n {
-			prev.next = tempNode.next
+			prevNode := tempNode.prev
+			nextNode := tempNode.next
+			prevNode.next = nextNode
+			nextNode.prev = prevNode
 			deleted = true
 		}
 		if !all && deleted {
 			return
 		}
-		if !deleted {
-			prev = tempNode
-		}
+
 		tempNode = tempNode.next
 	}
 }
 
-// task 6
-// t = O(n), where n = len(list)
-func (l *LinkedList) Insert(after *Node, add Node) {
-	if l.head == nil {
-		l.InsertFirst(add)
-		return
-	}
-	tempNode := l.head
-	// if node will not exists, then we have to finding it first
-	for tempNode.value != after.value {
-		tempNode = tempNode.next
-	}
-	if tempNode == l.tail {
-		l.AddInTail(add)
-	} else {
-		nextNode := tempNode.next
-		tempNode.next = &add
-		add.next = nextNode
-	}
+func (l *LinkedList2) Insert(after *Node, add Node) {
 
 }
 
-func (l *LinkedList) InsertFirst(first Node) {
-	if l.head == nil {
-		l.tail = &first
-	} else {
-		first.next = l.head
-	}
-	l.head = &first
+func (l *LinkedList2) InsertFirst(first Node) {
 
 }
 
-// task 3
-// t = O(1)
-func (l *LinkedList) Clean() {
+func (l *LinkedList2) Clean() {
 	l.head = nil
 	l.tail = nil
 }
 
-// func PrintLL(LL *LinkedList) {
-// 	temp := LL.head
-// 	for temp != nil {
-// 		fmt.Printf("%d ", temp.value)
-// 		temp = temp.next
-// 	}
-// 	fmt.Println()
-// }
-
-func GetLinkedList(values []int) *LinkedList {
-	var resultLL LinkedList // resulting linked list
+func GetLinkedList(values []int) *LinkedList2 {
+	var resultLL LinkedList2 // resulting linked list
 	for _, value := range values {
 		resultLL.AddInTail(Node{
 			value: value,
@@ -160,8 +122,7 @@ func GetLinkedList(values []int) *LinkedList {
 	return &resultLL
 }
 
-func EqualLists(l1 *LinkedList, l2 *LinkedList) bool {
-	// equals len and elements
+func EqualLists(l1 *LinkedList2, l2 *LinkedList2) bool {
 	if l1.head == nil &&
 		l2.head == nil {
 		return true
