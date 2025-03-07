@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	_ "os"
+	"os"
 )
 
 type DynArray[T any] struct {
@@ -33,7 +33,7 @@ func (da *DynArray[T]) MakeArray(sz int) {
 		arr[indx] = da.array[indx]
 	}
 	// or
-	copy(arr, da.array)
+	//copy(arr, da.array)
 	da.capacity = sz
 	da.array = arr
 }
@@ -127,3 +127,4 @@ func EqualArrays[T comparable](da1 *DynArray[T], da2 *DynArray[T]) bool {
 
 // 	return []int{}
 // }
+
