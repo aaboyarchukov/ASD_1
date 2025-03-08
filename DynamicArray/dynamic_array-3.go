@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	_ "os"
 )
 
 type DynArray[T any] struct {
@@ -28,17 +28,17 @@ func (da *DynArray[T]) MakeArray(sz int) {
 	var arr = make([]T, sz)
 
 	// copy values
-	for i := 0; i < len(da.array); i++ {
-		indx := i
-		arr[indx] = da.array[indx]
-	}
+	// for i := 0; i < len(da.array); i++ {
+	// 	indx := i
+	// 	arr[indx] = da.array[indx]
+	// }
 	// or
-	//copy(arr, da.array)
+	copy(arr, da.array)
 	da.capacity = sz
 	da.array = arr
 }
 
-// t = O(n), mem = O(1)
+// t = O(n), mem = O(l), where l is memory will have to reached our arrays
 func (da *DynArray[T]) Insert(itm T, index int) error {
 	if index > da.count || index < 0 {
 		return fmt.Errorf("bad index '%d'", index)
@@ -63,28 +63,15 @@ func (da *DynArray[T]) Insert(itm T, index int) error {
 
 }
 
+// t = O(n + m), where m is count of memory allocation, mem = O(l),
+// where l is memory will have to slice our array
 func (da *DynArray[T]) Remove(index int) error {
 	if da.count == 0 {
 		return nil
 	}
 
-	if index > da.count || index < 0 {
+	if index >= da.count || index < 0 {
 		return fmt.Errorf("bad index '%d'", index)
-	}
-
-	difference := float64(da.count) / float64(da.capacity)
-	var newCap float64
-	changed := false
-
-	for difference < 0.5 && da.capacity > 16 {
-		changed = true
-		newCap = float64(da.capacity) / 1.5
-		da.capacity = int(newCap)
-		difference = float64(da.count) / float64(da.capacity)
-	}
-
-	if changed {
-		da.MakeArray(int(newCap))
 	}
 
 	for i := index + 1; i <= da.count; i++ {
@@ -92,6 +79,27 @@ func (da *DynArray[T]) Remove(index int) error {
 		da.array[indx-1] = da.array[indx]
 	}
 	da.count--
+
+	difference := float64(da.count) / float64(da.capacity)
+	var newCap float64
+	changed := false
+
+	if difference < 0.5 && da.capacity > 16 {
+		changed = true
+		newCap = float64(da.capacity) / 1.5
+		da.capacity = int(newCap)
+	}
+	// for difference < 0.5 && da.capacity > 16 {
+	// 	changed = true
+	// 	newCap = float64(da.capacity) / 1.5
+	// 	da.capacity = int(newCap)
+	// 	difference = float64(da.count) / float64(da.capacity)
+	// }
+
+	if changed {
+		da.MakeArray(int(newCap))
+	}
+
 	return nil
 
 }
@@ -134,4 +142,3 @@ func EqualArrays[T comparable](da1 *DynArray[T], da2 *DynArray[T]) bool {
 
 // 	return []int{}
 // }
-

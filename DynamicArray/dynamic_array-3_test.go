@@ -196,7 +196,7 @@ func TestRemove(t *testing.T) {
 		},
 			&DynArray[int]{
 				count:    17,
-				capacity: 28,
+				capacity: 42,
 				array: []int{1, 2, 0, 0, 4, 0, 0, 0, 0, 0, 3, 0, 0, 1, 0, 7,
 					8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			}, 7, nil},
@@ -236,15 +236,25 @@ func TestRemove(t *testing.T) {
 				capacity: 16,
 				array:    []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			}, 1, 4, nil},
+		{"Test2", &DynArray[int]{
+			count:    12,
+			capacity: 16,
+			array:    []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 0, 0, 0},
+		},
+			&DynArray[int]{
+				count:    8,
+				capacity: 16,
+				array:    []int{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			}, 1, 4, nil},
 	}
 
 	for _, tempTest := range cycleTests {
 		test := tempTest
-		steps := test.cycle
 		var err error
-		for steps != 0 {
-			err = test.input.Remove(test.input.count - test.indx)
-			steps--
+
+		for range test.cycle {
+			err = test.input.Remove(test.input.count - 1)
+
 		}
 
 		if test.err == nil && err != nil {
