@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	_ "os"
 )
 
 type DynArray[T any] struct {
@@ -39,6 +39,10 @@ func (da *DynArray[T]) MakeArray(sz int) {
 }
 
 func (da *DynArray[T]) Insert(itm T, index int) error {
+	if index > da.count || index < 0 {
+		return fmt.Errorf("bad index '%d'", index)
+	}
+
 	if da.count == da.capacity {
 		da.MakeArray(da.capacity * 2)
 	}
@@ -48,20 +52,21 @@ func (da *DynArray[T]) Insert(itm T, index int) error {
 		return nil
 	}
 
-	if index < da.count || index > 0 {
-		for i := da.count - 1; i >= index; i-- {
-			da.array[i+1] = da.array[i]
-		}
-		da.array[index+1] = da.array[index]
-		da.array[index] = itm
-		da.count++
-		return nil
+	for i := da.count - 1; i >= index; i-- {
+		da.array[i+1] = da.array[i]
 	}
+	da.array[index+1] = da.array[index]
+	da.array[index] = itm
+	da.count++
+	return nil
 
-	return fmt.Errorf("bad index '%d'", index)
 }
 
 func (da *DynArray[T]) Remove(index int) error {
+	if index > da.count || index < 0 {
+		return fmt.Errorf("bad index '%d'", index)
+	}
+
 	difference := float64(da.count) / float64(da.capacity)
 	var newCap float64
 	changed := false
@@ -77,16 +82,13 @@ func (da *DynArray[T]) Remove(index int) error {
 		da.MakeArray(int(newCap))
 	}
 
-	if index < da.count && index > 0 {
-		for i := index + 1; i < da.count; i++ {
-			indx := i
-			da.array[indx-1] = da.array[indx]
-		}
-		da.count--
-		return nil
+	for i := index + 1; i < da.count; i++ {
+		indx := i
+		da.array[indx-1] = da.array[indx]
 	}
+	da.count--
+	return nil
 
-	return fmt.Errorf("bad index '%d'", index)
 }
 
 func (da *DynArray[T]) Append(itm T) {
@@ -127,4 +129,3 @@ func EqualArrays[T comparable](da1 *DynArray[T], da2 *DynArray[T]) bool {
 
 // 	return []int{}
 // }
-
