@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	_ "os"
 )
 
 type DynArray[T any] struct {
@@ -67,7 +67,7 @@ func (da *DynArray[T]) Insert(itm T, index int) error {
 // where l is memory will have to slice our array
 func (da *DynArray[T]) Remove(index int) error {
 	if da.count == 0 {
-		return nil
+		return fmt.Errorf("bad index '%d'", index)
 	}
 
 	if index >= da.count || index < 0 {
@@ -142,4 +142,3 @@ func EqualArrays[T comparable](da1 *DynArray[T], da2 *DynArray[T]) bool {
 
 // 	return []int{}
 // }
-
