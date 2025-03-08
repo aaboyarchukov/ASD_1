@@ -204,7 +204,48 @@ func TestRemove(t *testing.T) {
 
 	for _, tempTest := range tests {
 		test := tempTest
+
 		err := test.input.Remove(test.indx)
+
+		if test.err == nil && err != nil {
+			t.Errorf("failed %s: remove element raise error", test.name)
+			continue
+		}
+
+		if !EqualArrays(test.input, test.want) {
+			t.Errorf("failed %s: remove element", test.name)
+			continue
+		}
+	}
+
+	cycleTests := []struct {
+		name  string
+		input *DynArray[int]
+		want  *DynArray[int]
+		indx  int
+		cycle int
+		err   error
+	}{
+		{"Test1", &DynArray[int]{
+			count:    4,
+			capacity: 16,
+			array:    []int{1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		},
+			&DynArray[int]{
+				count:    0,
+				capacity: 16,
+				array:    []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			}, 1, 4, nil},
+	}
+
+	for _, tempTest := range cycleTests {
+		test := tempTest
+		steps := test.cycle
+		var err error
+		for steps != 0 {
+			err = test.input.Remove(test.input.count - test.indx)
+			steps--
+		}
 
 		if test.err == nil && err != nil {
 			t.Errorf("failed %s: remove element raise error", test.name)
