@@ -147,6 +147,16 @@ func TestInsert(t *testing.T) {
 					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			}, 5, 16},
+		{"Test5", &DynArray[int]{
+			count:    2,
+			capacity: 16,
+			array:    []int{1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		},
+			&DynArray[int]{
+				count:    2,
+				capacity: 16,
+				array:    []int{1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			}, 3, 18},
 	}
 
 	for _, tempTest := range tests {

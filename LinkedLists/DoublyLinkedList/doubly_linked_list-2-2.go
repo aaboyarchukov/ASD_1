@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 // task 9
 // Reverse doubly linked list
 // t = O(n), where n = len(list), mem = O(1)
@@ -36,7 +34,6 @@ func (l *LinkedList2) CyclicList() bool {
 	tempNode := l.head
 	prev := tempNode.prev
 	for tempNode != l.tail {
-		fmt.Println(tempNode)
 		if prev != nil && l.tail.next == prev {
 			return true
 		}
