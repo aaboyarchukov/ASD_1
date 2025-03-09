@@ -33,13 +33,16 @@ func (l *LinkedList2) AddInTail(item Node) {
 
 func (l *LinkedList2) Count() int {
 	count := 0
+	if l.head == nil {
+		return count
+	}
 	tempNode := l.head
 
-	for tempNode != nil {
+	for tempNode != l.tail {
 		count++
 		tempNode = tempNode.next
 	}
-	return count
+	return count + 1
 }
 
 func (l *LinkedList2) Find(n int) (Node, error) {
