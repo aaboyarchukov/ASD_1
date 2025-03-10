@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestAccount(t *testing.T) {
-	da := &BankDynArray[int]{}
+	da := &BankDynArray[any]{}
 	da.Init()
 	values := []int{1, 2, 3, 4, 5, 6, 7, 8}
 	for _, item := range values {
