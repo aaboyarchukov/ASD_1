@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	_ "os"
 	"slices"
 )
 
@@ -56,4 +56,3 @@ func GetStack[T any](values []T) *Stack[T] {
 		size: len(values),
 	}
 }
-
