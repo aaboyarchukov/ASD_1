@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	_ "os"
-	"slices"
 )
 
 type Stack[T any] struct {
@@ -47,12 +46,25 @@ func (st *Stack[T]) Push(itm T) {
 }
 
 func EqualStack[T comparable](st1 *Stack[T], st2 *Stack[T]) bool {
-	return slices.Equal(st1.base, st2.base)
+	if st1.size != st2.size {
+		return false
+	}
+
+	for i := 0; i < st1.size; i++ {
+		if st1.base[i] != st2.base[i] {
+			return false
+		}
+	}
+
+	return true
 }
 
 func GetStack[T any](values []T) *Stack[T] {
-	return &Stack[T]{
-		base: values,
-		size: len(values),
+	var result Stack[T]
+
+	for _, item := range values {
+		result.Push(item)
 	}
+
+	return &result
 }
