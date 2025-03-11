@@ -69,3 +69,4 @@ func GetStack[T any](values []T) *Stack[T] {
 	return &result
 }
 
+
