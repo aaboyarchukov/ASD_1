@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	_ "os"
 )
 
 type Stack[T any] struct {
@@ -68,5 +68,3 @@ func GetStack[T any](values []T) *Stack[T] {
 
 	return &result
 }
-
-
