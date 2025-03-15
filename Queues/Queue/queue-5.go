@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	_ "os"
+	"os"
 )
 
 type QNode[T any] struct {
@@ -87,3 +87,5 @@ func EqualQueue[T comparable](q1 *Queue[T], q2 *Queue[T]) bool {
 	}
 	return true
 }
+
+
