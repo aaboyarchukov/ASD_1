@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	_ "os"
 )
 
 type DequeNode[T any] struct {
@@ -125,5 +125,3 @@ func EqualDequeue[T comparable](d1 *Deque[T], d2 *Deque[T]) bool {
 	}
 	return true
 }
-
-

@@ -52,6 +52,11 @@ func TestAddFront(t *testing.T) {
 			t.Errorf("want: ")
 			PrintDequeue(*test.want)
 		}
+
+		if test.input.size != test.want.size {
+			t.Errorf("failed %s:\noutput: %v\twant: %v", test.name, test.input.size, test.want.size)
+
+		}
 	}
 }
 func TestRemoveFront(t *testing.T) {
@@ -79,6 +84,11 @@ func TestRemoveFront(t *testing.T) {
 			PrintDequeue(*test.input)
 			t.Errorf("want: ")
 			PrintDequeue(*test.want)
+		}
+
+		if test.input.size != test.want.size {
+			t.Errorf("failed %s:\noutput: %v\twant: %v", test.name, test.input.size, test.want.size)
+
 		}
 
 		switch test.err {
@@ -114,6 +124,11 @@ func TestAddTail(t *testing.T) {
 			t.Errorf("want: ")
 			PrintDequeue(*test.want)
 		}
+
+		if test.input.size != test.want.size {
+			t.Errorf("failed %s:\noutput: %v\twant: %v", test.name, test.input.size, test.want.size)
+
+		}
 	}
 }
 func TestRemoveTail(t *testing.T) {
@@ -141,6 +156,11 @@ func TestRemoveTail(t *testing.T) {
 			PrintDequeue(*test.input)
 			t.Errorf("want: ")
 			PrintDequeue(*test.want)
+		}
+
+		if test.input.size != test.want.size {
+			t.Errorf("failed %s:\noutput: %v\twant: %v", test.name, test.input.size, test.want.size)
+
 		}
 
 		switch test.err {
