@@ -3,7 +3,7 @@ package main
 import (
 	"constraints"
 	"errors"
-	_ "os"
+	"os"
 )
 
 type Node[T constraints.Ordered] struct {
@@ -168,3 +168,5 @@ func GetOrderedList[T constraints.Ordered](asc bool, values []T) *OrderedList[T]
 
 	return &l
 }
+
+
