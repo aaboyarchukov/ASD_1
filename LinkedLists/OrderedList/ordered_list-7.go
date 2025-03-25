@@ -4,7 +4,7 @@ import (
 	"constraints"
 	"errors"
 	"fmt"
-	"os"
+	_ "os"
 	"strings"
 )
 
@@ -85,7 +85,7 @@ func (l *OrderedList[T]) Add(item T) {
 		desc := (compareNodeAndLeft == -1 || compareNodeAndLeft == 0) &&
 			(compareNodeAndRight == 1 || compareNodeAndRight == 0)
 
-		if asc || desc {
+		if (l._ascending && asc) || (!l._ascending && desc) {
 			node.prev = left
 			node.next = right
 			left.next = &node
@@ -255,5 +255,3 @@ func EqualOrderedLists[T constraints.Ordered](l1 *OrderedList[T], values []T) bo
 
 	return true
 }
-
-
