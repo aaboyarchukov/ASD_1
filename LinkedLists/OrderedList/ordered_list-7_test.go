@@ -29,6 +29,11 @@ func TestSize(t *testing.T) {
 			input:    GetOrderedList(true, []int64{}),
 			wantSize: 0,
 		},
+		{
+			name:     "Test4",
+			input:    GetOrderedList(true, []int64{1, 1, 1, 1}),
+			wantSize: 4,
+		},
 	}
 	testsFloat := []testType[float64]{
 		{
@@ -46,6 +51,11 @@ func TestSize(t *testing.T) {
 			input:    GetOrderedList(true, []float64{}),
 			wantSize: 0,
 		},
+		{
+			name:     "Test4",
+			input:    GetOrderedList(true, []float64{1.1, 1.1, 1.1}),
+			wantSize: 3,
+		},
 	}
 	testsString := []testType[string]{
 		{
@@ -62,6 +72,11 @@ func TestSize(t *testing.T) {
 			name:     "Test3",
 			input:    GetOrderedList(true, []string{}),
 			wantSize: 0,
+		},
+		{
+			name:     "Test4",
+			input:    GetOrderedList(true, []string{"1", "1", "1", "1"}),
+			wantSize: 4,
 		},
 	}
 
@@ -137,10 +152,22 @@ func TestAdd(t *testing.T) {
 			want:  []int64{1, 2, 3, 3, 4, 5, 7, 9},
 		},
 		{
-			name:  "Test7",
+			name:  "Test8",
 			input: GetOrderedList(false, []int64{9, 1, 5, 2, 7, 3, 4}),
 			value: 3,
 			want:  []int64{9, 7, 5, 4, 3, 3, 2, 1},
+		},
+		{
+			name:  "Test9",
+			input: GetOrderedList(true, []int64{1, 1, 1, 1}),
+			value: 1,
+			want:  []int64{1, 1, 1, 1, 1},
+		},
+		{
+			name:  "Test10",
+			input: GetOrderedList(false, []int64{1, 1, 1, 1}),
+			value: 1,
+			want:  []int64{1, 1, 1, 1, 1},
 		},
 	}
 	testsFloat := []testType[float64]{
@@ -162,6 +189,36 @@ func TestAdd(t *testing.T) {
 			value: 3.4,
 			want:  []float64{3.4},
 		},
+		{
+			name:  "Test4",
+			input: GetOrderedList(false, []float64{2.1, 1.2, 5.6, 1.1}),
+			value: 3.4,
+			want:  []float64{5.6, 3.4, 2.1, 1.2, 1.1},
+		},
+		{
+			name:  "Test5",
+			input: GetOrderedList(false, []float64{2.1}),
+			value: 3.4,
+			want:  []float64{3.4, 2.1},
+		},
+		{
+			name:  "Test6",
+			input: GetOrderedList(false, []float64{}),
+			value: 3.4,
+			want:  []float64{3.4},
+		},
+		{
+			name:  "Test7",
+			input: GetOrderedList(false, []float64{1.1, 1.1, 1.1, 1.1}),
+			value: 1.1,
+			want:  []float64{1.1, 1.1, 1.1, 1.1, 1.1},
+		},
+		{
+			name:  "Test8",
+			input: GetOrderedList(true, []float64{1.1, 1.1, 1.1, 1.1}),
+			value: 1.1,
+			want:  []float64{1.1, 1.1, 1.1, 1.1, 1.1},
+		},
 	}
 	testsString := []testType[string]{
 		{
@@ -181,6 +238,36 @@ func TestAdd(t *testing.T) {
 			input: GetOrderedList(true, []string{}),
 			value: "12",
 			want:  []string{"12"},
+		},
+		{
+			name:  "Test4",
+			input: GetOrderedList(false, []string{"  1", "3  ", " 2"}),
+			value: "12",
+			want:  []string{"   3", "2", "12  ", " 1"},
+		},
+		{
+			name:  "Test5",
+			input: GetOrderedList(false, []string{"1"}),
+			value: "12",
+			want:  []string{"12", "1"},
+		},
+		{
+			name:  "Test6",
+			input: GetOrderedList(false, []string{}),
+			value: "12",
+			want:  []string{"12"},
+		},
+		{
+			name:  "Test7",
+			input: GetOrderedList(false, []string{"1  ", "1", " 1"}),
+			value: "1",
+			want:  []string{"1  ", "1", " 1", "1"},
+		},
+		{
+			name:  "Test8",
+			input: GetOrderedList(true, []string{"1  ", "1", " 1"}),
+			value: "1",
+			want:  []string{"1  ", "1", " 1", "1"},
 		},
 	}
 
