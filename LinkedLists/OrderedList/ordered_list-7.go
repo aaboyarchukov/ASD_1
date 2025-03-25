@@ -3,8 +3,21 @@ package main
 import (
 	"constraints"
 	"errors"
+	"fmt"
 	_ "os"
+	"strings"
 )
+
+func PrintList[T constraints.Ordered](l OrderedList[T]) {
+	fmt.Printf("head: %v, tail: %v\n", l.head.value, l.tail.value)
+	node := l.head
+
+	for node != nil {
+		fmt.Printf("%v ", node.value)
+		node = node.next
+	}
+	fmt.Println()
+}
 
 type Node[T constraints.Ordered] struct {
 	prev  *Node[T]
@@ -13,8 +26,9 @@ type Node[T constraints.Ordered] struct {
 }
 
 type OrderedList[T constraints.Ordered] struct {
-	head       *Node[T]
-	tail       *Node[T]
+	head *Node[T]
+	tail *Node[T]
+	// base       []T
 	_ascending bool
 }
 
@@ -35,51 +49,60 @@ func (l *OrderedList[T]) Add(item T) {
 		value: item,
 	}
 
-	left := l.head
-	right := l.tail
+	size := l.Count()
 
-	if node.value < left.value {
-		left.prev = &node
-		l.head = left.prev
-		l.head.next = left
-		return
-	}
-
-	if node.value > right.value {
-		right.next = &node
+	if size == 0 {
+		l.head = &node
 		l.tail = &node
-		node.prev = right
 		return
 	}
 
-	for left != right {
-		if l.Compare(node.value, left.value) == -1 {
-			nextToLeft := left.next
-			left.next = &node
-			node.next = nextToLeft
-			nextToLeft.prev = &node
-			node.prev = left
-			return
-		}
+	compareHead, compareTail := l.Compare(node.value, l.head.value), l.Compare(node.value, l.tail.value)
 
-		if l.Compare(node.value, left.value) == 1 {
-			prevToRight := right.prev
-			left.next = &node
-			node.next = prevToRight
-			prevToRight.prev = &node
+	if (l._ascending && compareTail == 1) || (!l._ascending && compareTail == -1) {
+		l.tail.next = &node
+		node.prev = l.tail
+		l.tail = &node
+		return
+	}
+	if (l._ascending && compareHead == -1) || (!l._ascending && compareHead == 1) {
+		node.next = l.head
+		l.head.prev = &node
+		l.head = &node
+		return
+	}
+
+	left, right := l.head, l.head.next
+	for right != nil {
+		compareNodeAndLeft := l.Compare(node.value, left.value)
+		compareNodeAndRight := l.Compare(node.value, right.value)
+
+		asc := (compareNodeAndLeft == 1 || compareNodeAndLeft == 0) &&
+			(compareNodeAndRight == -1 || compareNodeAndRight == 0)
+
+		desc := (compareNodeAndLeft == -1 || compareNodeAndLeft == 0) &&
+			(compareNodeAndRight == 1 || compareNodeAndRight == 0)
+
+		if asc || desc {
 			node.prev = left
+			node.next = right
+			left.next = &node
+			right.prev = &node
 			return
 		}
 
 		left = left.next
-		right = right.prev
+		right = right.next
 	}
 }
 
+func (l *OrderedList[T]) AddAtBase(item T) {
+
+}
 func (l *OrderedList[T]) Find(n T) (Node[T], error) {
 	tempNode := l.head
 	for tempNode != nil {
-		if tempNode.value == n {
+		if l.Compare(tempNode.value, n) == 0 {
 			return *tempNode, nil
 		}
 		tempNode = tempNode.next
@@ -101,19 +124,20 @@ func (l *OrderedList[T]) Delete(n T) {
 	tempNode := l.head
 	for tempNode != nil {
 		deleted := false
-		if tempNode.value == n && tempNode == l.head {
+		compareNode := l.Compare(tempNode.value, n)
+		if compareNode == 0 && tempNode == l.head {
 			l.head = tempNode.next
 			if l.head != nil {
 				l.head.prev = nil
 			}
 			deleted = true
-		} else if tempNode.value == n && tempNode == l.tail {
+		} else if compareNode == 0 && tempNode == l.tail {
 			l.tail = tempNode.prev
 			if l.tail != nil {
 				l.tail.next = nil
 			}
 			deleted = true
-		} else if tempNode.value == n {
+		} else if compareNode == 0 {
 			prevNode := tempNode.prev
 			nextNode := tempNode.next
 			prevNode.next = nextNode
@@ -149,22 +173,83 @@ func (l *OrderedList[T]) GetArray() []T {
 
 func (l *OrderedList[T]) Compare(v1 T, v2 T) int {
 
-	if v1 < v2 {
-		return -1
+	var valueStr1, valueStr2 string
+	flagStr := false
+
+	if value, ok := any(v1).(string); ok {
+		valueStr1 = strings.Trim(value, " ")
+		flagStr = true
 	}
-	if v1 > v2 {
-		return +1
+
+	if value, ok := any(v2).(string); ok {
+		valueStr2 = strings.Trim(value, " ")
+		flagStr = true
 	}
+
+	switch flagStr {
+	case false:
+		if v1 < v2 {
+			return -1
+		}
+		if v1 > v2 {
+			return +1
+		}
+
+	case true:
+		if valueStr1 < valueStr2 {
+			return -1
+		}
+		if valueStr1 > valueStr2 {
+			return +1
+		}
+	}
+
 	return 0
 }
 
 func GetOrderedList[T constraints.Ordered](asc bool, values []T) *OrderedList[T] {
-	var l OrderedList[T]
-	l._ascending = asc
+	l := &OrderedList[T]{
+		head:       nil,
+		tail:       nil,
+		_ascending: asc,
+	}
 
 	for _, item := range values {
 		l.Add(item)
 	}
 
-	return &l
+	return l
+}
+
+func EqualOrderedLists[T constraints.Ordered](l1 *OrderedList[T], values []T) bool {
+
+	if l1 == nil {
+		return false
+	}
+
+	if l1.Count() != len(values) {
+		return false
+	}
+
+	node1 := l1.head
+
+	for indx := 0; node1 != nil; indx++ {
+		if l1.Compare(node1.value, values[indx]) != 0 {
+			return false
+		}
+
+		if node1.next != nil && l1._ascending &&
+			l1.Compare(node1.next.value, node1.value) == -1 {
+			return false
+		}
+
+		if node1.next != nil && !l1._ascending &&
+			l1.Compare(node1.next.value, node1.value) == 1 {
+			return false
+		}
+
+		node1 = node1.next
+	}
+
+	return true
 }
