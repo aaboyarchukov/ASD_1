@@ -3,21 +3,9 @@ package main
 import (
 	"constraints"
 	"errors"
-	"fmt"
 	_ "os"
 	"strings"
 )
-
-func PrintList[T constraints.Ordered](l OrderedList[T]) {
-	fmt.Printf("head: %v, tail: %v\n", l.head.value, l.tail.value)
-	node := l.head
-
-	for node != nil {
-		fmt.Printf("%v ", node.value)
-		node = node.next
-	}
-	fmt.Println()
-}
 
 type Node[T constraints.Ordered] struct {
 	prev  *Node[T]
