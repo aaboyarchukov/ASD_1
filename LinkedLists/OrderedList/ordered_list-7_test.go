@@ -328,7 +328,6 @@ func TestAdd(t *testing.T) {
 			t.Errorf("failed %s: not equals lists. Result is: ", test.name)
 			PrintList(*test.input)
 		}
-		PrintList(*test.input)
 	}
 	for _, test := range testsFloat {
 		for _, item := range test.value {
