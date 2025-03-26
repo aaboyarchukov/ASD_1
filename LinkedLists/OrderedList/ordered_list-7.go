@@ -4,7 +4,7 @@ import (
 	"constraints"
 	"errors"
 	"fmt"
-	"os"
+	_ "os"
 	"strings"
 )
 
@@ -119,7 +119,7 @@ func (l *OrderedList[T]) Delete(n T) {
 	}
 
 	if l.Count() == 1 {
-		l.Clear(false)
+		l.Clear(l._ascending)
 		return
 	}
 
@@ -229,7 +229,7 @@ func EqualOrderedLists[T constraints.Ordered](l1 *OrderedList[T], values []T) bo
 		return false
 	}
 
-	if l1.Count() == len(values) {
+	if l1.Count() == len(values) && len(values) == 0 {
 		return true
 	}
 
@@ -264,9 +264,3 @@ func EqualOrderedLists[T constraints.Ordered](l1 *OrderedList[T], values []T) bo
 
 	return true
 }
-
-
-
-
-
-
