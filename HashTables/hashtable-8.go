@@ -14,6 +14,10 @@ type HashTable struct {
 }
 
 func Init(sz int, stp int) HashTable {
+	if stp == 0 {
+		stp = 1
+	}
+
 	ht := HashTable{size: sz, step: stp, slots: nil, fillSlots: nil, cap: 0}
 	ht.slots, ht.fillSlots = make([]string, sz), make([]bool, sz)
 	return ht

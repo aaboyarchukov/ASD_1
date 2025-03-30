@@ -290,9 +290,43 @@ func TestSeekSlot(t *testing.T) {
 				true,
 			},
 			size: 4,
-			cap:  0,
+			cap:  3,
 			step: 3,
 		}, "testValue", 1},
+		{"Test7", HashTable{
+			slots: []string{
+				"",
+				"",
+				"p",
+				"sdsd",
+			},
+			fillSlots: []bool{
+				true,
+				false,
+				true,
+				true,
+			},
+			size: 4,
+			cap:  3,
+			step: 2,
+		}, "testValue", 1},
+		{"Test8", HashTable{
+			slots: []string{
+				"",
+				"",
+				"p",
+				"sdsd",
+			},
+			fillSlots: []bool{
+				true,
+				true,
+				true,
+				true,
+			},
+			size: 4,
+			cap:  4,
+			step: 2,
+		}, "testValue", -1},
 	}
 
 	for _, test := range tests {
