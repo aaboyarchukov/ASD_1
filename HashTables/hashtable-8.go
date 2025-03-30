@@ -1,23 +1,29 @@
 package main
 
 import (
-	"os"
-	"strconv"
+	_ "os"
+	_ "strconv"
 )
 
 type HashTable struct {
-	size  int
-	step  int
-	slots []string
+	size      int
+	step      int
+	slots     []string
+	fillSlots []bool
+	cap       int
 }
 
 func Init(sz int, stp int) HashTable {
-	ht := HashTable{size: sz, step: stp, slots: nil}
-	ht.slots = make([]string, sz)
+	ht := HashTable{size: sz, step: stp, slots: nil, fillSlots: nil, cap: 0}
+	ht.slots, ht.fillSlots = make([]string, sz), make([]bool, sz)
 	return ht
 }
 
 func (ht *HashTable) HashFun(value string) int {
+	if ht.size == 0 {
+		return -1
+	}
+
 	var indx int
 	var sum byte
 	for i, item := range value {
@@ -30,31 +36,50 @@ func (ht *HashTable) HashFun(value string) int {
 }
 
 func (ht *HashTable) SeekSlot(value string) int {
+	if ht.size == 0 {
+		return -1
+	}
+
 	hash := ht.HashFun(value)
 
-	if ht.slots[hash] == "" {
+	if !ht.fillSlots[hash] {
 		return hash
 	}
 
-	for i := hash + 1; i != hash; i += ht.step {
-		indx := i
-		if indx >= ht.size {
-			i = indx % ht.size
-			indx = i
+	if ht.cap < ht.size {
+
+		resultIndx, indx := hash, hash
+		for ht.fillSlots[resultIndx] {
+			indx += ht.step
+			resultIndx = indx % ht.size
 		}
 
-		if ht.slots[indx] == "" {
-			return indx
-		}
+		return resultIndx
 	}
 
 	return -1
 }
 
 func (ht *HashTable) Put(value string) int {
+	if ht.size == 0 {
+		return -1
+	}
+
+	hash := ht.HashFun(value)
+	if ht.slots[hash] == value {
+		return hash
+	}
+
+	findIndx := ht.Find(value)
+	if findIndx != -1 {
+		return findIndx
+	}
+
 	indx := ht.SeekSlot(value)
 	if indx != -1 {
 		ht.slots[indx] = value
+		ht.fillSlots[indx] = true
+		ht.cap++
 	}
 
 	return indx
@@ -70,9 +95,3 @@ func (ht *HashTable) Find(value string) int {
 
 	return -1
 }
-
-
-
-
-
-
