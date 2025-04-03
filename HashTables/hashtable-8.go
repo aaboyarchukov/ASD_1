@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
-	"strconv"
+	_ "os"
+	_ "strconv"
 )
 
 type HashTable struct {
@@ -99,10 +99,3 @@ func (ht *HashTable) Find(value string) int {
 
 	return -1
 }
-
-
-
-
-
-
-
