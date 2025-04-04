@@ -9,21 +9,20 @@ import (
 type NativeDictionary[T any] struct {
 	size      int
 	slots     []string
-	values    []T
 	fillSlots []bool
+	values    []T
 	cap       int
 }
 
-// создание экземпляра словаря
 func Init[T any](sz int) NativeDictionary[T] {
 	nd := NativeDictionary[T]{size: sz, slots: nil, values: nil}
 	nd.slots = make([]string, sz)
 	nd.values = make([]T, sz)
+	nd.fillSlots = make([]bool, sz)
 	return nd
 }
 
 func (nd *NativeDictionary[T]) HashFun(value string) int {
-	// всегда возвращает корректный индекс слота
 	if nd.size == 0 {
 		return -1
 	}
@@ -40,17 +39,13 @@ func (nd *NativeDictionary[T]) HashFun(value string) int {
 }
 
 func (nd *NativeDictionary[T]) IsKey(key string) bool {
-	// возвращает true если ключ имеется
 	if nd.size == 0 {
 		return false
 	}
 
-	for _, keyFromSlots := range nd.slots {
-		if keyFromSlots == key {
-			return true
-		}
-	}
-	return false
+	hash := nd.HashFun(key)
+
+	return nd.slots[hash] == key
 }
 
 func (nd *NativeDictionary[T]) Get(key string) (T, error) {
@@ -81,8 +76,12 @@ func (nd *NativeDictionary[T]) Put(key string, value T) {
 			return
 		}
 
-		nd.slots[hash] = key
-		nd.values[hash] = value
+		if !nd.fillSlots[hash] {
+			nd.slots[hash] = key
+			nd.values[hash] = value
+			nd.fillSlots[hash] = true
+		}
+
 	}
 
 }
