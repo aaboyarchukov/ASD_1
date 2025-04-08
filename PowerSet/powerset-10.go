@@ -3,18 +3,17 @@ package main
 import (
 	"constraints"
 	"fmt"
-	//      "fmt"
+	_ "os"
+	_ "strconv"
 )
 
 type PowerSet[T constraints.Ordered] struct {
-	// ваша реализация хранилища
 	cap       int
 	slots     []T
 	fillSlots []bool
 	step      int
 }
 
-// создание экземпляра множества
 func Init[T constraints.Ordered]() PowerSet[T] {
 	return PowerSet[T]{
 		cap:       0,
@@ -91,33 +90,24 @@ func (ps *PowerSet[T]) Remove(value T) bool {
 }
 
 func (ps *PowerSet[T]) Intersection(set2 PowerSet[T]) PowerSet[T] {
-	// пересечение текущего множества и set2
 	var result PowerSet[T]
 	return result
 }
 
 func (*PowerSet[T]) Union(set2 PowerSet[T]) PowerSet[T] {
-	// объединение текущего множества и set2
 	var result PowerSet[T]
-	// ...
 	return result
 }
 
 func (*PowerSet[T]) Difference(set2 PowerSet[T]) PowerSet[T] {
-	// разница текущего множества и set2
 	var result PowerSet[T]
-	// ...
 	return result
 }
 
 func (*PowerSet[T]) IsSubset(set2 PowerSet[T]) bool {
-	// возвращает true, если set2 есть
-	// подмножество текущего множества
 	return false
 }
 
 func (*PowerSet[T]) Equals(set2 PowerSet[T]) bool {
-	// возвращает true,
-	// если set2 равно текущему множеству
 	return false
 }
