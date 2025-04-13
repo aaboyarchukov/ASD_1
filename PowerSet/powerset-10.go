@@ -2,10 +2,10 @@ package main
 
 import (
 	"constraints"
-	"os"
+	_ "os"
+
 	// "fmt"
-	"slices"
-	"strconv"
+	_ "strconv"
 )
 
 type PowerSet[T constraints.Ordered] struct {
@@ -16,7 +16,7 @@ type PowerSet[T constraints.Ordered] struct {
 func Init[T constraints.Ordered]() PowerSet[T] {
 	return PowerSet[T]{
 		cap:   0,
-		slots: make([]T, 0, 20000),
+		slots: make([]T, 0),
 	}
 }
 
@@ -29,18 +29,35 @@ func (ps *PowerSet[T]) Put(value T) {
 		ps.slots = append(ps.slots, value)
 		ps.cap++
 	}
+}
 
-	return
+func (ps *PowerSet[T]) Index(value T) int {
+	for indx, item := range ps.slots {
+		if item == value {
+			return indx
+		}
+	}
+
+	return -1
+}
+
+func Delete[T constraints.Ordered](slice []T, indx int) []T {
+
+	oldLen := len(slice)
+	slice = append(slice[:indx], slice[indx+1:]...)
+	clear(slice[len(slice):oldLen])
+	return slice
+
 }
 
 func (ps *PowerSet[T]) Get(value T) bool {
-	return slices.Contains(ps.slots, value)
+	return ps.Index(value) >= 0
 }
 
 func (ps *PowerSet[T]) Remove(value T) bool {
 	if ps.Get(value) {
-		indx := slices.Index(ps.slots, value)
-		ps.slots = slices.Delete(ps.slots, indx, indx+1)
+		indx := ps.Index(value)
+		ps.slots = Delete(ps.slots, indx)
 		ps.cap--
 		return true
 	}
@@ -104,9 +121,3 @@ func (ps *PowerSet[T]) Equals(set2 PowerSet[T]) bool {
 
 	return true
 }
-
-
-
-
-
-
