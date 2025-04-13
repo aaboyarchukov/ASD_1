@@ -2,9 +2,11 @@ package main
 
 import (
 	"constraints"
-	"os"
+	_ "os"
+
+	// "fmt"
 	"slices"
-	"strconv"
+	_ "strconv"
 )
 
 type PowerSet[T constraints.Ordered] struct {
@@ -103,7 +105,3 @@ func (ps *PowerSet[T]) Equals(set2 PowerSet[T]) bool {
 
 	return true
 }
-
-
-
-
