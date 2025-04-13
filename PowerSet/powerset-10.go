@@ -104,3 +104,9 @@ func (ps *PowerSet[T]) Equals(set2 PowerSet[T]) bool {
 
 	return true
 }
+
+
+
+
+
+
