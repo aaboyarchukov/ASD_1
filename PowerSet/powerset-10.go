@@ -3,8 +3,8 @@ package main
 import (
 	"constraints"
 	// "fmt"
-	"os"
-	"strconv"
+	_ "os"
+	_ "strconv"
 )
 
 type PowerSet[T constraints.Ordered] struct {
@@ -41,12 +41,8 @@ func (ps *PowerSet[T]) Index(value T) int {
 }
 
 func Delete[T constraints.Ordered](slice []T, indx int) []T {
-
-	oldLen := len(slice)
 	slice = append(slice[:indx], slice[indx+1:]...)
-	clear(slice[len(slice):oldLen])
 	return slice
-
 }
 
 func (ps *PowerSet[T]) Get(value T) bool {
@@ -149,10 +145,3 @@ func GetPowerSet[T constraints.Ordered](values []T) *PowerSet[T] {
 
 	return result
 }
-
-
-
-
-
-
-
