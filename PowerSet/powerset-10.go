@@ -3,8 +3,8 @@ package main
 import (
 	"constraints"
 	// "fmt"
-	"os"
-	"strconv"
+	_ "os"
+	_ "strconv"
 )
 
 type PowerSet[T constraints.Ordered] struct {
@@ -79,15 +79,22 @@ func (ps *PowerSet[T]) Union(set2 PowerSet[T]) PowerSet[T] {
 		return set2
 	}
 
+	var result *PowerSet[T] = &PowerSet[T]{
+		slots: make([]T, 0),
+		cap:   0,
+	}
+
 	for _, item := range set2.slots {
-		if !ps.Get(item) {
-			ps.Put(item)
-		}
+		result.Put(item)
+	}
+
+	for _, item := range ps.slots {
+		result.Put(item)
 	}
 
 	return PowerSet[T]{
-		slots: ps.slots,
-		cap:   ps.cap,
+		slots: result.slots,
+		cap:   result.cap,
 	}
 
 }
@@ -145,10 +152,3 @@ func GetPowerSet[T constraints.Ordered](values []T) *PowerSet[T] {
 
 	return result
 }
-
-
-
-
-
-
-
