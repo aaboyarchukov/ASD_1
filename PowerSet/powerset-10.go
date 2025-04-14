@@ -75,10 +75,6 @@ func (ps *PowerSet[T]) Intersection(set2 PowerSet[T]) PowerSet[T] {
 }
 
 func (ps *PowerSet[T]) Union(set2 PowerSet[T]) PowerSet[T] {
-	if ps.Equals(set2) {
-		return set2
-	}
-
 	var result *PowerSet[T] = &PowerSet[T]{
 		slots: make([]T, 0),
 		cap:   0,
