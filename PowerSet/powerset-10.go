@@ -3,8 +3,8 @@ package main
 import (
 	"constraints"
 	// "fmt"
-	"os"
-	"strconv"
+	_ "os"
+	_ "strconv"
 )
 
 type PowerSet[T constraints.Ordered] struct {
@@ -148,9 +148,3 @@ func GetPowerSet[T constraints.Ordered](values []T) *PowerSet[T] {
 
 	return result
 }
-
-
-
-
-
-

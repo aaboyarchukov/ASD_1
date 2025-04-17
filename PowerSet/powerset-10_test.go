@@ -234,6 +234,13 @@ func TestUnion(t *testing.T) {
 			slots: []string{"5", "1", "2", "6"},
 			cap:   4,
 		}},
+		{"Test7", GetPowerSet([]string{"a", "b", "c", "d"}), PowerSet[string]{
+			slots: []string{"5", "1", "2", "6"},
+			cap:   4,
+		}, PowerSet[string]{
+			slots: []string{"a", "b", "c", "d", "5", "1", "2", "6"},
+			cap:   8,
+		}},
 	}
 
 	for _, test := range tests {
