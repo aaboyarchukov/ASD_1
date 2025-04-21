@@ -1,7 +1,7 @@
 package main
 
 import (
-	"os"
+	_ "os"
 )
 
 type BloomFilter struct {
@@ -51,9 +51,3 @@ func (bf *BloomFilter) IsValue(s string) bool {
 
 	return false
 }
-
-
-
-
-
-

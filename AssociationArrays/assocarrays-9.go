@@ -80,6 +80,7 @@ func (nd *NativeDictionary[T]) Put(key string, value T) {
 			nd.slots[hash] = key
 			nd.values[hash] = value
 			nd.fillSlots[hash] = true
+			nd.cap += 1
 		}
 
 	}

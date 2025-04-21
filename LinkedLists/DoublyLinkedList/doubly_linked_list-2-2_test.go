@@ -99,3 +99,26 @@ func TestSortMerge(t *testing.T) {
 		}
 	}
 }
+
+// tests for DLL2
+
+func TestAddInTailDLL2(t *testing.T) {
+	tests := []struct {
+		name  string
+		input DummyLinkedList2
+		node  DummyNode
+		want  DummyLinkedList2
+	}{
+		{"Test1: ", GetDLL2([]int{}), DummyNode{value: 1}, GetDLL2([]int{1})},
+		{"Test2: ", GetDLL2([]int{22, 1, 3, 12}), DummyNode{value: 10}, GetDLL2([]int{10, 22, 1, 3, 12})},
+		{"Test3: ", GetDLL2([]int{22}), DummyNode{value: 11}, GetDLL2([]int{11, 22})},
+	}
+
+	for _, tempTest := range tests {
+		test := tempTest
+		test.input.AddInTail(test.node)
+		if !EqualDLL2(test.input, test.want) {
+			t.Errorf("failed %s: insert first node", test.name)
+		}
+	}
+}

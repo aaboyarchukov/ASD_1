@@ -120,6 +120,48 @@ func SortMergeList(l1, l2 *LinkedList2) *LinkedList2 {
 // task 13
 // Create dummy doubly linked list
 
-// type DummyNode struct {
-// 	basic Node
-// }
+type DummyNode struct {
+	prev    *DummyNode
+	next    *DummyNode
+	value   int
+	isDummy bool
+}
+
+type DummyLinkedList2 struct {
+	head *DummyNode
+	tail *DummyNode
+}
+
+func NewDLL2() DummyLinkedList2 {
+	return DummyLinkedList2{
+		head: &DummyNode{
+			isDummy: true,
+		},
+		tail: &DummyNode{
+			isDummy: true,
+		},
+	}
+}
+
+func GetDLL2(values []int) DummyLinkedList2 {
+	return DummyLinkedList2{}
+}
+
+// t = O(1), mem = O(1)
+func (dll *DummyLinkedList2) AddInTail(node DummyNode) {
+	if node.isDummy {
+		return
+	}
+
+	prev := dll.tail.prev
+
+	prev.next = &node
+	dll.tail.prev = &node
+
+	node.prev = prev
+	node.next = dll.tail
+}
+
+func EqualDLL2(dll2_1, dll2_2 DummyLinkedList2) bool {
+	return true
+}
