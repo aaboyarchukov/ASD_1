@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestAccount(t *testing.T) {
 	da := &BankDynArray[any]{}
@@ -27,4 +30,9 @@ func TestAccount(t *testing.T) {
 
 	t.Log(da.account, da.count, da.capacity)
 
+}
+
+func TestMDA(t *testing.T) {
+	mda := InitMDA(1, 2, 3)
+	fmt.Println(mda.GetOneDemIndex(1, 1, 1))
 }

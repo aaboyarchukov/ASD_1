@@ -156,3 +156,67 @@ func EqualArraysWithBank[T comparable](da1 *BankDynArray[T], da2 *BankDynArray[T
 
 // task 7
 // Multidimensional dynamic array
+
+type MultiDimArray struct {
+	dimens  []int
+	size    int
+	storage []int
+}
+
+func InitMDA(dimens ...int) MultiDimArray {
+	size := 1
+
+	for _, item := range dimens {
+		size *= item
+	}
+
+	return MultiDimArray{
+		dimens:  dimens,
+		size:    size,
+		storage: make([]int, size),
+	}
+}
+
+// t = O(n), where n = len(indxs), mem = O(1)
+func (mda *MultiDimArray) GetOneDemIndex(indxs ...int) int {
+	if len(indxs) > len(mda.dimens) {
+		return -1
+	}
+
+	for indx, item := range indxs {
+		if item > mda.dimens[indx]-1 {
+			return -1
+		}
+	}
+
+	result := 0
+	for i, indx := range indxs {
+		temp := 1
+		for _, dem := range mda.dimens[i+1:] {
+			temp *= dem
+		}
+		result += indx * temp
+	}
+
+	return result
+}
+
+// t = O(n), where n = len(indxs), mem = O(1)
+func (mda *MultiDimArray) Get(indxs ...int) int {
+	indx := mda.GetOneDemIndex(indxs...)
+	if indx == -1 {
+		return -1
+	}
+
+	return mda.storage[indx]
+}
+
+// t = O(n), where n = len(indxs), mem = O(1)
+func (mda *MultiDimArray) Put(value int, indxs ...int) {
+	indx := mda.GetOneDemIndex(indxs...)
+	if indx == -1 {
+		return
+	}
+
+	mda.storage[indx] = value
+}
