@@ -69,52 +69,62 @@ func (st *Stack[T]) Push(itm T) {
 	st.size++
 }
 
-func RemoveStack[T any](dest Stack[T], src Stack[T]) {
-
-}
-
 type QueueStacks[T any] struct {
-	enqueBody Stack[T]
-	dequeBody Stack[T]
+	enqueBody *Stack[T]
+	dequeBody *Stack[T]
+	cap       int
 }
 
 // t = O(1), mem = O(1)
 func (q *QueueStacks[T]) Enqueue(itm T) {
 	q.enqueBody.Push(itm)
+	q.cap += 1
 }
 
 // t = o(1) mem = O(1)
 func (q *QueueStacks[T]) Dequeue() (T, error) {
 	if q.dequeBody.size == 0 {
 		q.dequeBody.base = make([]T, q.enqueBody.size)
-		copy(q.dequeBody.base, q.enqueBody.base) // it does not work!!!
-		fmt.Println(q.dequeBody.base, q.enqueBody.base)
+		for i := range q.cap {
+			q.dequeBody.base[i] = q.enqueBody.base[q.cap-1-i]
+		}
+		q.dequeBody.size = q.enqueBody.size
 	}
+
 	value, err := q.dequeBody.Pop()
 	if err != nil {
 		return value, err
 	}
 
+	q.cap -= 1
+
 	return value, nil
 }
 
-func GetQueueStacks[T any](values []T) *QueueStacks[T] {
-	var result QueueStacks[T]
+func GetQueueStacks[T any](values []T) QueueStacks[T] {
+	var result QueueStacks[T] = QueueStacks[T]{
+		enqueBody: &Stack[T]{
+			base: make([]T, 0),
+		},
+		dequeBody: &Stack[T]{
+			base: make([]T, 0),
+		},
+	}
 
 	for _, item := range values {
 		result.Enqueue(item)
 	}
 
-	return &result
+	return result
 }
 
-func EqualStack[T comparable](st1 *Stack[T], st2 *Stack[T]) bool {
-	if st1.size != st2.size {
+func EqualStack[T comparable](st1 []T, st2 []T) bool {
+	if len(st1) != len(st2) {
 		return false
 	}
 
-	for i := 0; i < st1.size; i++ {
-		if st1.base[i] != st2.base[i] {
+	for i := 0; i < len(st1); i++ {
+		if st1[i] != st2[i] {
 			return false
 		}
 	}
@@ -143,39 +153,60 @@ func ReverseQueue[T any](q *Queue[T]) *Queue[T] {
 }
 
 // task 6
+// можно попробовать сделать по-другому -  через правую сторону
 type QueueArr[T any] struct {
 	head int
 	tail int
+	cap  int
 	body []T
 }
 
-func GetCircleQueue[T any](values []T) *QueueArr[T] {
-	var result QueueArr[T]
-	sizeArray := len(values)
-	result.head = 1
-	result.tail = sizeArray - 1
-
-	body := make([]T, sizeArray+1)
-	for indx, value := range values {
-		if indx == sizeArray {
-			break
-		}
-
-		body[indx+1] = value
+func Init[T any](sz int) QueueArr[T] {
+	body := make([]T, sz)
+	return QueueArr[T]{
+		cap:  0,
+		head: 0,
+		tail: 0,
+		body: body,
 	}
-
-	result.body = body
-
-	return &result
 }
 
-func EqualCircleQueue[T comparable](body1 *[]T, body2 *[]T) bool {
-	if len(*body1) != len(*body2)+1 {
+func (qa *QueueArr[T]) IsFull() bool {
+	return qa.cap >= len(qa.body)
+}
+
+func (qa *QueueArr[T]) Enqueue(value T) {
+	if qa.IsFull() {
+		return
+	}
+
+	qa.body[qa.tail] = value
+	if qa.tail == 0 {
+		qa.tail = len(qa.body) - 1
+	} else {
+		qa.tail -= 1
+	}
+
+	qa.cap += 1
+}
+
+func (qa *QueueArr[T]) Dequeue() {
+	if qa.head == 0 {
+		qa.head = len(qa.body) - 1
+	} else {
+		qa.head -= 1
+	}
+
+	qa.cap -= 1
+}
+
+func EqualCircleQueue[T comparable](body1 []T, body2 []T) bool {
+	if len(body1) != len(body2) {
 		return false
 	}
 
-	for indx := range len(*body2) {
-		if (*body1)[indx+1] != (*body2)[indx] {
+	for indx := range len(body2) {
+		if body1[indx] != body2[indx] {
 			return false
 		}
 	}

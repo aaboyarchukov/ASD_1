@@ -77,16 +77,16 @@ func TestReverseQueue(t *testing.T) {
 func TestQueueStacksEnque(t *testing.T) {
 	tests := []struct {
 		name  string
-		input *QueueStacks[any]
+		input QueueStacks[any]
 		value any
-		want  *QueueStacks[any]
+		want  QueueStacks[any]
 	}{
 		{"Test1", GetQueueStacks([]any{1, "2", false}), 3, GetQueueStacks([]any{1, "2", false, 3})},
 	}
 
 	for _, test := range tests {
 		test.input.Enqueue(test.value)
-		if !EqualStack(&test.input.enqueBody, &test.want.enqueBody) {
+		if !EqualStack(test.input.enqueBody.base, test.want.enqueBody.base) {
 			t.Errorf("failed %s: enqueue", test.name)
 		}
 	}
@@ -94,8 +94,8 @@ func TestQueueStacksEnque(t *testing.T) {
 func TestQueueStacksDeque(t *testing.T) {
 	tests := []struct {
 		name  string
-		input *QueueStacks[any]
-		want  *QueueStacks[any]
+		input QueueStacks[any]
+		want  QueueStacks[any]
 		err   error
 		value any
 	}{
@@ -104,10 +104,6 @@ func TestQueueStacksDeque(t *testing.T) {
 
 	for _, test := range tests {
 		value, err := test.input.Dequeue()
-		// if !EqualStack(&test.input.enqueBody, &test.want.enqueBody) {
-		// 	t.Errorf("failed %s: dequeue, diffrent queues", test.name)
-		// }
-
 		if value != test.value {
 			t.Errorf("failed %s: dequeue, diffrent values", test.name)
 		}
@@ -125,20 +121,30 @@ func TestQueueStacksDeque(t *testing.T) {
 
 	}
 }
-func TestGetCircleQueue(t *testing.T) {
+func TestQueueArrEnqueue(t *testing.T) {
 	tests := []struct {
-		name string
-		want []any
+		name  string
+		input QueueArr[any]
+		value any
+		want  QueueArr[any]
 	}{
-		{"Test1", []any{1, "2", 3}},
-		{"Test2", []any{1}},
-		{"Test3", []any{}},
+		{"Test1", QueueArr[any]{
+			cap:  3,
+			body: []any{1, 0, 0, 3, 4, 5},
+			head: 0,
+			tail: 2,
+		}, 2, QueueArr[any]{
+			cap:  4,
+			body: []any{1, 0, 2, 3, 4, 5},
+			head: 0,
+			tail: 1,
+		}},
 	}
 
 	for _, test := range tests {
-		result := GetCircleQueue(test.want)
-		if !EqualCircleQueue(&result.body, &test.want) {
-			t.Errorf("failed %s: get circle queue, output is:\n result: %v \t want: %v", test.name, result.body, test.want)
+		test.input.Enqueue(test.value)
+		if !EqualCircleQueue(test.input.body, test.want.body) {
+			t.Errorf("failed %s: enqueue value", test.name)
 		}
 	}
 }
