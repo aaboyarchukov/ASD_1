@@ -155,11 +155,6 @@ func GetLinkedList(values []int) *LinkedList2 {
 	return &resultLL
 }
 
-func GetCyclicLinkedList(values []int) *LinkedList2 {
-	// TODO: make function
-	return nil
-}
-
 func EqualLists(l1 *LinkedList2, l2 *LinkedList2) bool {
 	countL1, countL2 := l1.Count(), l2.Count()
 	if countL1 != countL2 {

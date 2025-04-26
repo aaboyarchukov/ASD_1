@@ -153,3 +153,6 @@ func EqualArraysWithBank[T comparable](da1 *BankDynArray[T], da2 *BankDynArray[T
 
 	return true
 }
+
+// task 7
+// Multidimensional dynamic array

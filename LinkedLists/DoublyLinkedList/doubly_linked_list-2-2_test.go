@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -50,7 +51,6 @@ func TestCyclic(t *testing.T) {
 		test := tempTest
 
 		test.input.GetCyclicList(test.item)
-		t.Logf("%s", test.name)
 		if test.input.CyclicList() != test.want {
 			t.Errorf("failed %s: with checking cycle", test.name)
 		}
@@ -110,8 +110,8 @@ func TestAddInTailDLL2(t *testing.T) {
 		want  DummyLinkedList2
 	}{
 		{"Test1: ", GetDLL2([]int{}), DummyNode{value: 1}, GetDLL2([]int{1})},
-		{"Test2: ", GetDLL2([]int{22, 1, 3, 12}), DummyNode{value: 10}, GetDLL2([]int{10, 22, 1, 3, 12})},
-		{"Test3: ", GetDLL2([]int{22}), DummyNode{value: 11}, GetDLL2([]int{11, 22})},
+		{"Test2: ", GetDLL2([]int{22, 1, 3, 12}), DummyNode{value: 10}, GetDLL2([]int{22, 1, 3, 12, 10})},
+		{"Test3: ", GetDLL2([]int{22}), DummyNode{value: 11}, GetDLL2([]int{22, 11})},
 	}
 
 	for _, tempTest := range tests {
@@ -119,6 +119,141 @@ func TestAddInTailDLL2(t *testing.T) {
 		test.input.AddInTail(test.node)
 		if !EqualDLL2(test.input, test.want) {
 			t.Errorf("failed %s: insert first node", test.name)
+		}
+	}
+}
+
+func TestCountDLL2(t *testing.T) {
+	tests := []struct {
+		name  string
+		input DummyLinkedList2
+		want  int
+	}{
+		{"Test1: ", GetDLL2([]int{}), 0},
+		{"Test2: ", GetDLL2([]int{22, 1, 3, 12}), 4},
+		{"Test3: ", GetDLL2([]int{22}), 1},
+	}
+
+	for _, test := range tests {
+		if test.input.Count() != test.want {
+			t.Errorf("failed %s: wrong size", test.name)
+			fmt.Println(test.input.Count())
+		}
+	}
+}
+
+func TestInsertDLL2(t *testing.T) {
+	tests := []struct {
+		name  string
+		input DummyLinkedList2
+		node  DummyNode
+		after DummyNode
+		want  DummyLinkedList2
+	}{
+		{"Test1", GetDLL2([]int{1, 2, 3, 4}),
+			DummyNode{
+				isDummy: false,
+				value:   5,
+			}, DummyNode{
+				isDummy: false,
+				value:   2,
+			}, GetDLL2([]int{1, 2, 5, 3, 4})},
+		{"Test2", GetDLL2([]int{1}),
+			DummyNode{
+				isDummy: false,
+				value:   5,
+			}, DummyNode{
+				isDummy: false,
+				value:   1,
+			}, GetDLL2([]int{1, 5})},
+		{"Test3", GetDLL2([]int{}),
+			DummyNode{
+				isDummy: false,
+				value:   5,
+			}, DummyNode{
+				isDummy: false,
+				value:   1,
+			}, GetDLL2([]int{5})},
+		{"Test4", GetDLL2([]int{1, 2, 3, 4}),
+			DummyNode{
+				isDummy: false,
+				value:   5,
+			}, DummyNode{
+				isDummy: false,
+				value:   5,
+			}, GetDLL2([]int{1, 2, 3, 4})},
+	}
+
+	for _, test := range tests {
+		test.input.Insert(&test.after, test.node)
+
+		if !EqualDLL2(test.input, test.want) {
+			t.Errorf("%s failed: wrong insert", test.name)
+		}
+	}
+}
+
+func TestInsertFirstDLL2(t *testing.T) {
+	tests := []struct {
+		name  string
+		input DummyLinkedList2
+		node  DummyNode
+		want  DummyLinkedList2
+	}{
+		{"Test1", GetDLL2([]int{1, 2, 3, 4}),
+			DummyNode{
+				isDummy: false,
+				value:   5,
+			}, GetDLL2([]int{5, 1, 2, 3, 4})},
+	}
+
+	for _, test := range tests {
+		test.input.InsertFirst(test.node)
+
+		if !EqualDLL2(test.input, test.want) {
+			t.Errorf("%s failed: wrong insert first", test.name)
+		}
+	}
+}
+
+func TestDeleteDLL2(t *testing.T) {
+	tests := []struct {
+		name  string
+		input DummyLinkedList2
+		value int
+		all   bool
+		want  DummyLinkedList2
+	}{
+		{"Test1", GetDLL2([]int{1, 2, 3, 4}),
+			2, false, GetDLL2([]int{1, 3, 4})},
+
+		{"Test2", GetDLL2([]int{1, 2, 3, 4}),
+			2, true, GetDLL2([]int{1, 3, 4})},
+
+		{"Test3", GetDLL2([]int{1, 2, 3, 2, 2, 4}),
+			2, true, GetDLL2([]int{1, 3, 4})},
+
+		{"Test4", GetDLL2([]int{1, 2, 3, 4}),
+			5, true, GetDLL2([]int{1, 2, 3, 4})},
+
+		{"Test5", GetDLL2([]int{}),
+			5, true, GetDLL2([]int{})},
+
+		{"Test6", GetDLL2([]int{2}),
+			2, true, GetDLL2([]int{})},
+
+		{"Test7", GetDLL2([]int{2, 2, 2, 2}),
+			2, false, GetDLL2([]int{2, 2, 2})},
+
+		{"Test8", GetDLL2([]int{2, 2, 2, 2}),
+			2, true, GetDLL2([]int{})},
+	}
+
+	for _, test := range tests {
+		test.input.Delete(test.value, test.all)
+
+		if !EqualDLL2(test.input, test.want) {
+			t.Errorf("%s failed: wrong delete", test.name)
 		}
 	}
 }

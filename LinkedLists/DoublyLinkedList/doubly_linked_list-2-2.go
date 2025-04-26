@@ -133,7 +133,7 @@ type DummyLinkedList2 struct {
 }
 
 func NewDLL2() DummyLinkedList2 {
-	return DummyLinkedList2{
+	ddl := DummyLinkedList2{
 		head: &DummyNode{
 			isDummy: true,
 		},
@@ -141,14 +141,30 @@ func NewDLL2() DummyLinkedList2 {
 			isDummy: true,
 		},
 	}
+
+	ddl.head.next = ddl.tail
+	ddl.tail.prev = ddl.head
+
+	return ddl
 }
 
+// t = O(n), mem = O(n), where n = len(values), because we are using result
+// with struct of DLL2
 func GetDLL2(values []int) DummyLinkedList2 {
-	return DummyLinkedList2{}
+	var result DummyLinkedList2 = NewDLL2()
+	for _, item := range values {
+		result.AddInTail(DummyNode{
+			value: item,
+		})
+	}
+
+	return result
 }
 
+// head -> [dummy] -> node1 -> ... -> nodeN -> [dummy] <- tail
 // t = O(1), mem = O(1)
 func (dll *DummyLinkedList2) AddInTail(node DummyNode) {
+
 	if node.isDummy {
 		return
 	}
@@ -162,6 +178,106 @@ func (dll *DummyLinkedList2) AddInTail(node DummyNode) {
 	node.next = dll.tail
 }
 
+// t = O(n), where n = len(dll2), mem = O(1)
+func (dll *DummyLinkedList2) Insert(after *DummyNode, add DummyNode) {
+	if dll.Count() == 0 {
+		dll.AddInTail(add)
+		return
+	}
+
+	if add.isDummy {
+		return
+	}
+
+	temp := dll.head
+
+	for temp != nil {
+		if !temp.isDummy && temp.value == after.value {
+			break
+		}
+		temp = temp.next
+	}
+
+	if temp == nil {
+		return
+	}
+
+	next := temp.next
+	temp.next = &add
+	next.prev = &add
+	add.next = next
+	add.prev = temp
+
+}
+
+func (dll DummyLinkedList2) InsertFirst(add DummyNode) {
+	if add.isDummy {
+		return
+	}
+
+	next := dll.head.next
+	dll.head.next = &add
+	next.prev = &add
+	add.next = next
+	add.prev = dll.head
+
+}
+
+// t = O(n), where n = len(dll2), mem = O(1)
+func (dll *DummyLinkedList2) Delete(n int, all bool) {
+	if dll.Count() == 0 {
+		return
+	}
+
+	temp := dll.head
+
+	for temp != nil {
+		prev := temp.prev
+		next := temp.next
+
+		if temp.value == n {
+			prev.next = next
+			next.prev = prev
+
+			if !all {
+				return
+			}
+		}
+		temp = temp.next
+	}
+}
+
+// t = O(n), where n = size of dll, mem = O(1)
+func (dll *DummyLinkedList2) Count() int {
+	count := 0
+
+	tempNode := dll.head
+
+	for tempNode != nil {
+		if !tempNode.isDummy {
+			count++
+		}
+		tempNode = tempNode.next
+	}
+	return count
+}
+
+// t = O(1), mem = O(1)
 func EqualDLL2(dll2_1, dll2_2 DummyLinkedList2) bool {
+	size_1, size_2 := dll2_1.Count(), dll2_2.Count()
+	if size_1 != size_2 {
+		return false
+	}
+
+	temp_1, temp_2 := dll2_1.head, dll2_2.head
+
+	for temp_1 != dll2_1.tail {
+		if temp_1.value != temp_2.value {
+			return false
+		}
+		temp_1 = temp_1.next
+		temp_2 = temp_2.next
+	}
+
 	return true
 }
