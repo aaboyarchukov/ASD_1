@@ -220,3 +220,17 @@ func (mda *MultiDimArray) Put(value int, indxs ...int) {
 
 	mda.storage[indx] = value
 }
+
+func EqualsDemns(dimens1, dimens2 []int) bool {
+	if len(dimens1) != len(dimens2) {
+		return false
+	}
+
+	for i, item := range dimens1 {
+		if item != dimens2[i] {
+			return false
+		}
+	}
+
+	return true
+}
