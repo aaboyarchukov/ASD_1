@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"constraints"
@@ -183,3 +184,35 @@ func GetMinDequeue[T constraints.Ordered](values []T) MinDeque[T] {
 }
 
 // task 6
+// Dequeue with dynamic array
+
+type DequeueArray[T constraints.Ordered] struct {
+	storageFront []T
+	storageTail  []T
+	size         int
+}
+
+func (da *DequeueArray[T]) Size() int {
+	return da.size
+}
+func (da *DequeueArray[T]) AddTail(itm T) {
+	da.storageTail = append(da.storageTail, itm)
+	da.size++
+}
+func (da *DequeueArray[T]) AddFront(itm T) {
+	da.storageFront = append(da.storageFront, itm)
+	da.size++
+}
+func (da *DequeueArray[T]) RemoveTail() (T, error) {
+	var result T = da.storageTail[da.size-1]
+	da.storageTail = slices.Delete(da.storageTail, da.size-1, da.size)
+	da.size--
+	return result, nil
+}
+
+func (da *DequeueArray[T]) RemoveFront() (T, error) {
+	var result T = da.storageFront[da.size-1]
+	da.storageFront = slices.Delete(da.storageFront, da.size-1, da.size)
+	da.size--
+	return result, nil
+}

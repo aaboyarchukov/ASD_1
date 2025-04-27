@@ -55,3 +55,16 @@ func TestGetMin(t *testing.T) {
 		}
 	}
 }
+
+func TestDequeueArrayAddFront(t *testing.T) {
+
+}
+func TestDequeueArrayAddTail(t *testing.T) {
+
+}
+func TestDequeueArrayRemoveTail(t *testing.T) {
+
+}
+func TestDequeueArrayRemoveFront(t *testing.T) {
+
+}
